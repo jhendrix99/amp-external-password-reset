@@ -1,3 +1,5 @@
 Check .env to see what you need to setup to get this working, if you change the port be sure to update the docker-compose before deploying.
 
 You will want to update the views, they are still setup for my hosting. You do not have permission to use my assets or name in your deployment.
+
+You will need to edit AMPs login page on your controller to add a <a> tag with an href leading to where ever you setup the reset system.
