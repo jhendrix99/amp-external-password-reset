@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  amp-reset:
+    build: .
+    container_name: amp-reset
+    env_file: .env
+    ports:
+      - "3927:3927"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 2g
