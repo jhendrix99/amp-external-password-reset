@@ -12,7 +12,6 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// --- 🔍 API LOGGING ---
 axios.interceptors.request.use(request => {
     console.log(`\n🔵 [REQUEST] ${request.method.toUpperCase()} ${request.url}`);
     if (request.data) {
@@ -36,7 +35,6 @@ axios.interceptors.response.use(response => {
     return Promise.reject(error);
 });
 
-// --- 📧 MAIL CONFIG ---
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
@@ -52,7 +50,6 @@ const limitRequest = rateLimit({
     message: "Too many requests."
 });
 
-// --- Helper: Login ---
 async function getAmpSession() {
     try {
         const response = await axios.post(`${process.env.AMP_URL}/API/Core/Login`, {
@@ -67,7 +64,6 @@ async function getAmpSession() {
     }
 }
 
-// --- Helper: Find User ---
 async function findUser(sessionId, targetUsername) {
     const config = {
         headers: {
@@ -85,7 +81,6 @@ async function findUser(sessionId, targetUsername) {
             return null;
         }
 
-        // Match on username/Username/Name (AMP exposes Name like "user#0001")
         const matchedUser = userList.find(u => {
             const nameCandidate = u.username || u.Username || u.Name;
             return nameCandidate && nameCandidate.toLowerCase() === targetUsername.toLowerCase();
@@ -115,14 +110,12 @@ async function findUser(sessionId, targetUsername) {
     }
 }
 
-// --- Helper: Mask Email ---
 function maskEmail(email) {
     const [user, domain] = email.split("@");
     if (user.length <= 2) return `${user[0]}***@${domain}`;
     return `${user.slice(0, 2)}***@${domain}`;
 }
 
-// --- Routes ---
 app.post('/request', limitRequest, async (req, res) => {
     const usernameInput = req.body.username.trim();
     console.log(`\n🚀 Starting Reset Process for: ${usernameInput}`);
